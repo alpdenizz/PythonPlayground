@@ -1,0 +1,132 @@
+#!/usr/bin/env python
+
+import argparse, datetime, hashlib, re, socket, sys # do not use any other imports/libraries
+from pyasn1.codec.der import decoder, encoder
+
+# took x.y hours (please specify here how much time your solution required)
+
+# parse arguments
+parser = argparse.ArgumentParser(description='OCSP responder', add_help=False)
+parser.add_argument("--privkey", required=True, metavar='privkey', type=str, help="CA private key (DER/PEM)")
+parser.add_argument("--cacert", required=True, metavar='cacert', type=str, help="CA certificate (DER/PEM)")
+parser.add_argument("--revoked", required=True, metavar='cert', type=str, nargs='+', help="Revoked certificates (DER/PEM)")
+args = parser.parse_args()
+
+
+def int_to_bytestring(i, length):
+    # converts integer to bytestring
+    s = ""
+    for smth in xrange(length):
+        s = chr(i & 0xff) + s
+        i >>= 8
+    return s
+
+def bytestring_to_int(s):
+    # converts bytestring to integer
+    i = 0
+    for char in s:
+        i <<= 8
+        i |= ord(char)
+    return i
+
+def pem_to_der(content):
+    # converts PEM content (if it is PEM) to DER
+    if content[:2] == '--':
+        content = content.replace("-----BEGIN CERTIFICATE REQUEST-----", "")
+        content = content.replace("-----END CERTIFICATE REQUEST-----", "")
+        content = content.replace("-----BEGIN CERTIFICATE-----", "")
+        content = content.replace("-----END CERTIFICATE-----", "")
+        content = content.replace("-----BEGIN PUBLIC KEY-----", "")
+        content = content.replace("-----END PUBLIC KEY-----", "")
+        content = content.replace("-----BEGIN RSA PRIVATE KEY-----", "")
+        content = content.replace("-----END RSA PRIVATE KEY-----", "")
+        content = content.decode('base64')
+    return content
+
+def get_pubkey_cert(cert):
+    # reads certificate and returns subjectPublicKey
+
+def get_privkey(filename):
+    # reads private key file and returns (n, d)
+
+
+def digestinfo_der(m):
+    # returns ASN.1 DER encoded DigestInfo structure containing SHA1 digest of file
+
+    return der
+
+def sign(m, keyfile):
+
+def pkcsv15pad_sign(plaintext, n):
+    # pad plaintext for signing according to PKCS#1 v1.5
+
+
+# serial numbers of revoked certificates
+serials = []
+
+# in a loop obtain DER encoded OCSP request and send response
+def process_requests():
+
+    sserv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sserv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sserv.bind(('', 8888))
+    sserv.listen(0)
+
+    while True:
+        (s, address) = sserv.accept()
+        print "[+] Connection from %s:%s" % (address[0], address[1])
+
+        # read HTTP request header
+
+        # send error message if GET request (bonus)
+
+
+        # read OCSP request
+
+        # produce OCSP response
+
+        # prepend HTTP response header
+
+        # send the response
+
+        s.send(answer)
+        s.close()
+
+# load serials of revoked certificates to list 'serials'
+def load_serials(certificates):
+    global serials
+
+    for certificate in certificates:
+        serials.append(serial)
+
+# produce OCSP response for DER encoded request
+def produce_response(req, ip):
+    global args, serials
+
+    # return unauthorized(6) if non-localhost client (bonus)
+
+    # get subject name from CA certificate
+
+    # get subjectPublicKey (not subjectPublicKeyInfo) from CA certificate
+
+    # get serial number from request
+
+    # calculate SHA1 hash of CA subject name and CA public key (return CertStatus 'unknown' if not issued by CA)
+
+    # return 'revoked' CertStatus if serial in serials (otherwise return 'good')
+
+
+    # nonce extension (bonus)
+
+    tbsResponseData = ...
+
+    # get signature of tbsResponseData
+    signature = sign(tbsResponseData, args.privkey)
+
+    resp = ...
+
+    # return DER encoded OCSP response
+    return resp
+
+load_serials(args.revoked)
+process_requests()

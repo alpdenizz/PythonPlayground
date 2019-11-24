@@ -1,0 +1,137 @@
+#!/usr/bin/env python
+
+import argparse, datetime, os, socket, sys, time, urlparse # do not use any other imports/libraries
+
+# took x.y hours (please specify here how much time your solution required)
+
+# parse arguments
+parser = argparse.ArgumentParser(description='TLS v1.2 client')
+parser.add_argument('url', type=str, help='URL to request')
+parser.add_argument('--certificate', type=str, help='File to write PEM-encoded server certificate')
+args = parser.parse_args()
+
+# converts bytes (big endian) to integer
+def bn(bytes):
+        num = 0
+        for byte in bytes:
+                num <<= 8
+                num |= ord(byte)
+        return num
+
+# converts integer to bytes (big endian)
+def nb(i, length):
+    bytes = ""
+    for smth in xrange(length):
+        bytes = chr(i & 0xff) + bytes
+        i >>= 8
+    return bytes
+
+# returns TLS record that contains client_hello handshake message
+def client_hello():
+
+    print "--> client_hello()"
+
+    # list of cipher suites the client supports
+    csuite = "\x00\x05"	# TLS_RSA_WITH_RC4_128_SHA
+    csuite+= "\x00\x2f" # TLS_RSA_WITH_AES_128_CBC_SHA
+    csuite+= "\x00\x35" # TLS_RSA_WITH_AES_256_CBC_SHA
+
+    # add handshake message header
+
+    # add record layer header
+
+    return record
+
+# returns TLS record that contains 'Certificate unknown' fatal alert message
+def alert():
+    print "--> alert()"
+
+    # add alert message
+
+    # add record layer header
+
+    return record
+
+# parse TLS handshake messages
+def parsehandshake(r):
+    global server_hello_done_received
+
+    # read handshake message type and length from message header
+
+    if htype == "\x02":
+        print "	<--- server_hello()"
+
+        print "	[+] server randomness:", server_random.encode('hex').upper()
+        print "	[+] server timestamp:", gmt
+        print "	[+] TLS session ID:", sessid.encode('hex').upper()
+
+        if cipher=="\x00\x2f":
+            print "	[+] Cipher suite: TLS_RSA_WITH_AES_128_CBC_SHA"
+        elif cipher=="\x00\x35":
+            print "	[+] Cipher suite: TLS_RSA_WITH_AES_256_CBC_SHA"
+        elif cipher=="\x00\x05":
+            print "	[+] Cipher suite: TLS_RSA_WITH_RC4_128_SHA"
+        else:
+            print "[-] Unsupported cipher suite selected:", cipher.encode('hex')
+            sys.exit(1)
+
+        if compression!="\x00":
+            print "[-] Wrong compression:", compression.encode('hex')
+            sys.exit(1)
+
+    elif htype == "\x0b":
+        print "	<--- certificate()"
+        print "	[+] Server certificate length:", certlen
+        if args.certificate:
+            print "	[+] Server certificate saved in:", args.certificate
+    elif htype == "\x0e":
+        print "	<--- server_hello_done()"
+    else:
+        print "[-] Unknown Handshake Type:", htype.encode('hex')
+        sys.exit(1)
+
+    # handle the case of several handshake messages in one record
+    leftover = ...
+    if len(leftover):
+        parsehandshake(leftover)
+
+# parses TLS record
+def parserecord(r):
+
+    # read from the TLS record header the content type and length
+
+
+# read from the socket full TLS record
+def readrecord():
+    global s
+
+    record = ""
+
+    # read the TLS record header (5 bytes)
+
+    # find data length
+
+    # read the TLS record body
+
+    return record
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+url = urlparse.urlparse(args.url)
+host = url.netloc.split(':')
+if len(host) > 1:
+    port = int(host[1])
+else:
+    port = 443
+host = host[0]
+path = url.path
+
+s.connect((host, port))
+s.send(client_hello())
+
+server_hello_done_received = False
+while not server_hello_done_received:
+    parserecord(readrecord())
+s.send(alert())
+
+print "[+] Closing TCP connection!"
+s.close()

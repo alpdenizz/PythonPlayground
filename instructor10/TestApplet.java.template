@@ -1,0 +1,35 @@
+package appcrypto;
+
+import javacard.framework.*;
+import javacard.security.*;
+import javacardx.crypto.*;
+
+// took x.y hours (please specify here how much time your solution required)
+
+
+public class TestApplet extends Applet {
+	
+	private KeyPair keypair;
+	private RSAPublicKey pub;
+	private Cipher rsa;
+	
+	public static void install(byte[] ba, short offset, byte len) {
+		(new TestApplet()).register();
+	}
+	
+	public void process(APDU apdu) {
+		byte[] buf = apdu.getBuffer();
+		
+		switch (buf[ISO7816.OFFSET_INS]) {
+		case (0x02):
+			return;
+		case (0x04):
+			return;
+		case (0x06):
+			return;
+		case (0x08):
+			return;
+		}
+		ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);		
+	}
+}

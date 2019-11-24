@@ -1,0 +1,77 @@
+#!/usr/bin/python
+
+import datetime, os, sys
+from pyasn1.codec.der import decoder
+
+# $ sudo apt-get install python-crypto
+sys.path = sys.path[1:] # removes script directory from aes.py search path
+from Crypto.Cipher import AES          # https://www.dlitz.net/software/pycrypto/api/current/Crypto.Cipher.AES-module.html
+from Crypto.Protocol.KDF import PBKDF2 # https://www.dlitz.net/software/pycrypto/api/current/Crypto.Protocol.KDF-module.html#PBKDF2
+from Crypto.Util.strxor import strxor  # https://www.dlitz.net/software/pycrypto/api/current/Crypto.Util.strxor-module.html#strxor
+import hashlib, hmac # do not use any other imports/libraries
+
+# took x.y hours (please specify here how much time your solution required)
+
+
+# this function benchmarks how many PBKDF2 iterations
+# can be performed in one second on the machine it is executed
+def benchmark():
+
+    # measure time for performing 10000 iterations
+
+    # extrapolate to 1 second
+
+    print "[+] Benchmark: %s PBKDF2 iterations in 1 second" % (iter)
+
+    return iter # returns number of iterations that can be performed in 1 second
+
+
+def encrypt(pfile, cfile):
+
+    # benchmarking
+
+    # asking for password
+
+    # derieving key
+
+    # writing ciphertext in temporary file and calculating HMAC digest
+
+    # writing DER structure in cfile
+
+    # writing temporary ciphertext file to cfile
+
+    # deleting temporary ciphertext file
+
+    pass
+
+
+def decrypt(cfile, pfile):
+
+
+    # reading DER structure
+
+    # asking for password
+
+    # derieving key
+
+    # first pass over ciphertext to calculate and verify HMAC
+
+    # second pass over ciphertext to decrypt
+
+    pass
+
+def usage():
+    print "Usage:"
+    print "-encrypt <plaintextfile> <ciphertextfile>"
+    print "-decrypt <ciphertextfile> <plaintextfile>"
+    sys.exit(1)
+
+
+if len(sys.argv) != 4:
+    usage()
+elif sys.argv[1] == '-encrypt':
+    encrypt(sys.argv[2], sys.argv[3])
+elif sys.argv[1] == '-decrypt':
+    decrypt(sys.argv[2], sys.argv[3])
+else:
+    usage()

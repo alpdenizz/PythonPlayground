@@ -1,0 +1,41 @@
+#!/usr/bin/python
+
+import hashlib, sys
+from pyasn1.codec.der import decoder
+sys.path = sys.path[1:] # don't remove! otherwise the library import below will try to import your hmac.py 
+import hmac # do not use any other imports/libraries
+
+# took x.y hours (please specify here how much time your solution required)
+
+def verify(filename):
+    print "[+] Reading HMAC DigestInfo from", filename+".hmac"
+
+
+
+    if digest_calculated != digest:
+        print "[-] Wrong key or message has been manipulated!"
+    else:
+        print "[+] HMAC verification successful!"
+
+def mac(filename):
+    print "[?] Enter key:",
+    key = raw_input()
+
+
+    print "[+] Writing HMAC DigestInfo to", filename+".hmac"
+
+
+def usage():
+    print "Usage:"
+    print "-verify <filename>"
+    print "-mac <filename>"
+    sys.exit(1)
+
+if len(sys.argv) != 3:
+    usage()
+elif sys.argv[1] == '-mac':
+    mac(sys.argv[2])
+elif sys.argv[1] == '-verify':
+    verify(sys.argv[2])
+else:
+    usage()

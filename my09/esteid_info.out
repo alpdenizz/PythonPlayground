@@ -1,0 +1,27 @@
+$ ./esteid_info.py
+[+] Selected reader: Gemalto PC Twin Reader (B96CA568) 00 00
+[+] EstEID v3.5 (10.2014) cold (eID)
+[+] Personal data file:
+	[1]Surname: HASANOV
+	[2]First name line 1: ELDAR
+	[3]First name line 2:  
+	[4]Sex: M
+	[5]Nationality: AZE
+	[6]Birth date: 29.02.1996
+	[7]Personal identification code: 39602290025
+	[8]Document number: BB0035714
+	[9]Expiry date: 31.08.2019
+	[10]Place of birth: AZE
+	[11]Date of issuance: 01.09.2017
+	[12]Type of residence permit: ELAMISLUBA ÕPPIMISEKS
+	[13]Notes line 1:  
+	[14]Notes line 2: RESIDENCE PERMIT
+	[15]Notes line 3: FOR STUDIES
+	[16]Notes line 4: KUNI / UNTIL 31.08.2019
+[+] PIN retry counters:
+	PIN1: 3 left
+	PIN2: 3 left
+	PUK: 3 left
+[+] Key usage counters:
+	signature key: 0 times
+	authentication key: 1 times

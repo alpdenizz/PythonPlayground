@@ -1,0 +1,21 @@
+$ ./esteid_getcert.py --cert auth --out auth.pem
+[+] Selected reader: Gemalto PC Twin Reader (B96CA568) 00 00
+[+] EstEID v3.5 (10.2014) cold (eID)
+[=] Retrieving auth certificate...
+[+] Certificate size: 1499 bytes
+[+] Certificate stored in auth.pem
+$ openssl x509 -in auth.pem -text | grep O=ESTEID
+        Subject: C=EE, O=ESTEID, OU=authentication, CN=HASANOV,ELDAR,39602290025, SN=HASANOV, GN=ELDAR/serialNumber=39602290025
+$ ./esteid_getcert.py --cert sign --out sign.pem
+[+] Selected reader: Gemalto PC Twin Reader (B96CA568) 00 00
+[+] EstEID v3.5 (10.2014) cold (eID)
+[=] Retrieving sign certificate...
+[+] Certificate size: 1476 bytes
+[+] Certificate stored in sign.pem
+$ openssl x509 -in sign.pem -text | grep O=ESTEID
+        Subject: C=EE, O=ESTEID, OU=digital signature, CN=HASANOV,ELDAR,39602290025, SN=HASANOV, GN=ELDAR/serialNumber=39602290025
+$ openssl verify -CAfile ESTEID-SK_2011.pem.crt sign.pem
+sign.pem: C = EE, O = ESTEID, OU = digital signature, CN = "HASANOV,ELDAR,39602290025", SN = HASANOV, GN = ELDAR, serialNumber = 39602290025
+error 20 at 0 depth lookup:unable to get local issuer certificate
+$ openssl verify -CAfile ESTEID-SK_2015.pem.crt sign.pem
+sign.pem: OK

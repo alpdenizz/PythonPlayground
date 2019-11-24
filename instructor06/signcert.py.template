@@ -1,0 +1,100 @@
+#!/usr/bin/env python
+
+import argparse, hashlib, os, sys # do not use any other imports/libraries
+from pyasn1.codec.der import decoder, encoder
+
+# took x.y hours (please specify here how much time your solution required)
+
+
+# parse arguments
+parser = argparse.ArgumentParser(description='issue TLS server certificate based on CSR', add_help=False)
+parser.add_argument("private_key_file", help="Private key file (in PEM or DER form)")
+parser.add_argument("CA_cert_file", help="CA certificate (in PEM or DER form)")
+parser.add_argument("csr_file", help="CSR file (in PEM or DER form)")
+parser.add_argument("output_cert_file", help="File to store certificate (in PEM form)")
+args = parser.parse_args()
+
+
+def int_to_bytestring(i, length):
+    # converts integer to bytestring
+    s = ""
+    for smth in xrange(length):
+        s = chr(i & 0xff) + s
+        i >>= 8
+    return s
+
+def bytestring_to_int(s):
+    # converts bytestring to integer
+    i = 0
+    for char in s:
+        i <<= 8
+        i |= ord(char)
+    return i
+
+def pem_to_der(content):
+    # converts PEM content (if it is PEM) to DER
+    return content
+
+def get_privkey(filename):
+    # reads private key file and returns (n, d)
+    return int(privkey[0][1]), int(privkey[0][3])
+
+def pkcsv15pad_sign(plaintext, n):
+    # pad plaintext for signing according to PKCS#1 v1.5
+
+    # calculate byte size of modulus n
+
+    # plaintext must be at least 3 bytes smaller than modulus
+
+    # generate padding bytes
+
+def pkcsv15pad_remove(plaintext):
+    # removes PKCS#1 v1.5 padding
+    return plaintext
+
+
+def digestinfo_der(m):
+    # returns ASN.1 DER encoded DigestInfo structure containing SHA256 digest of m
+    return der
+
+
+def sign(m, keyfile):
+    # sign DigestInfo of message m
+    return c
+
+
+def get_subject_cn(csr_der):
+    # return CommonName value from CSR's Distinguished Name
+    # looping over Distinguished Name entries until CN found
+
+def get_subjectPublicKeyInfo(csr_der):
+    # returns DER encoded subjectPublicKeyInfo from CSR
+
+def get_subjectName(cert_der):
+    # return subject name DER from CA certificate
+    return encoder.encode(decoder.decode(cert_der)[0][0][5])
+
+def issue_certificate(private_key_file, issuer, subject, pubkey):
+    # receives CA private key filename, CA distinguished name, subject's distinguished name and subjectPublicKeyInfo
+    # returns X.509v3 certificate in PEM format
+    return pem
+
+# obtain subject's CN from CSR
+csr_der = pem_to_der(open(args.csr_file).read())
+subject_CN = get_subject_cn(csr_der)
+
+print "[+] Issuing certificate for \"%s\"" % (subject_cn_text)
+
+# obtain subjectPublicKeyInfo from CSR
+pubkey = get_subjectPublicKeyInfo(csr_der)
+
+# construct subject name
+subject = ...
+
+# get subject name from CA certificate
+CAcert = pem_to_der(open(args.CA_cert_file).read())
+CAsubject = get_subjectName(CAcert)
+
+# issue certificate
+cert_pem = issue_certificate(args.private_key_file, CAsubject, subject, pubkey)
+open(args.output_cert_file, 'wb').write(cert_pem)
